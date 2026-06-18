@@ -1,0 +1,17 @@
+aws_region = "eu-west-1"
+
+app_name = "orqestra-insight-hub-prod"
+
+repository_url = "https://github.com/DevRepublic-NL/orqestra-insight-hub-new"
+
+branch_name = "main"
+
+environment = "prod"
+
+branch_stage = "PRODUCTION"
+
+owner = "DevRepublic"
+
+cost_center = "PROJ-001"
+
+# github_token — pass via TF_VAR_github_token environment variable

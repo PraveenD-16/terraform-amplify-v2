@@ -10,3 +10,10 @@ environment = "demo"
 
 branch_stage = "DEVELOPMENT"
 
+owner = "DevRepublic"
+
+cost_center = "PROJ-001"
+
+# github_token — DO NOT set here. Pass via environment variable:
+#   Linux/macOS:   export TF_VAR_github_token="ghp_..."
+#   PowerShell:    $env:TF_VAR_github_token = "ghp_..."

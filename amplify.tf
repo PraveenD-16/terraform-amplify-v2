@@ -1,3 +1,12 @@
+locals {
+  common_tags = {
+    Environment        = var.environment
+    Owner              = var.owner
+    CostCenter         = var.cost_center
+    DataClassification = "Internal"
+  }
+}
+
 resource "aws_amplify_app" "demo" {
 
   name         = var.app_name
@@ -8,42 +17,29 @@ resource "aws_amplify_app" "demo" {
   enable_branch_auto_deletion = true
 
   environment_variables = {
-    NODE_ENV = "development"
+    NODE_ENV = var.environment == "prod" ? "production" : "development"
   }
 
   build_spec = <<-EOT
-version: 1
+    version: 1
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci --cache .npm --prefer-offline
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        baseDirectory: dist
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - .npm/**/*
+  EOT
 
-frontend:
-phases:
-preBuild:
-commands:
-- npm ci --cache .npm --prefer-offline
-
-```
-build:
-  commands:
-    - npm run build
-```
-
-artifacts:
-baseDirectory: dist
-files:
-- '**/*'
-
-cache:
-paths:
-- .npm/**/*
-EOT
-
-  tags = {
-    Project            = "Orqestra"
-    ManagedBy          = "Terraform"
-    Environment        = var.environment
-    Owner              = "DevRepublic"
-    DataClassification = "Internal"
-  }
-
+  tags = local.common_tags
 }
 
 resource "aws_amplify_branch" "main" {
@@ -56,5 +52,5 @@ resource "aws_amplify_branch" "main" {
 
   enable_auto_build = true
 
+  tags = local.common_tags
 }
-
